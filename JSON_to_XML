@@ -6,12 +6,9 @@ import xml.etree.ElementTree as et
 import xml.etree.ElementTree as ElementTree
 import xml.etree.cElementTree as ET
 from xml.dom import minidom
-
-
-    
+   
 tree = ET.ElementTree(file="annot.xml")  
 root = tree.getroot()
-
 
 
 for frameler in root:
