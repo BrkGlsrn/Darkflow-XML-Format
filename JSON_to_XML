@@ -1,0 +1,78 @@
+
+#Convert JSON file to XML file by using online platforms, then using this code,create xml file for each frame.
+
+import os
+import xml.etree.ElementTree as et
+import xml.etree.ElementTree as ElementTree
+import xml.etree.cElementTree as ET
+from xml.dom import minidom
+
+
+    
+tree = ET.ElementTree(file="annot.xml")  
+root = tree.getroot()
+
+
+
+for frameler in root:
+    new_root = minidom.Document()
+    xml =new_root.createElement("annotation")
+    new_root.appendChild(xml)
+    for attr in frameler:        
+        if attr.tag == "filename":
+                        
+            frame_file_child = new_root.createElement("filename")
+            frame_file_child.appendChild(new_root.createTextNode(attr.text))
+            xml.appendChild(frame_file_child)
+            
+            frame_size_child = new_root.createElement("size")
+            xml.appendChild(frame_size_child)
+              
+            save_path_file = attr.text
+            save_path_file = save_path_file[:-4]+".xml"
+                        
+            
+        if attr.tag == "width":
+            width_child = new_root.createElement("width")
+            frame_size_child.appendChild(width_child)
+            width_child.appendChild(new_root.createTextNode(attr.text))
+         
+        if attr.tag == "height":
+            height_child = new_root.createElement("height")
+            frame_size_child.appendChild(height_child)
+            height_child.appendChild(new_root.createTextNode(attr.text))
+                    
+        if attr.tag == "object":
+            frame_object_child = new_root.createElement("object")
+            xml.appendChild(frame_object_child)
+                        
+            for sub_attr in attr:
+                if sub_attr.tag == "name":
+                    name = new_root.createElement("name")
+                    frame_object_child.appendChild(name)
+                    name.appendChild(new_root.createTextNode(sub_attr.text))
+                    bndbox_child = new_root.createElement("bndbox")
+                    frame_object_child.appendChild(bndbox_child)
+                if sub_attr.tag == "xmin":
+                    xmin = new_root.createElement("xmin")            
+                    bndbox_child.appendChild(xmin)
+                    xmin.appendChild(new_root.createTextNode(sub_attr.text))
+                if sub_attr.tag == "ymin":
+                    ymin = new_root.createElement("ymin")
+                    bndbox_child.appendChild(ymin)
+                    ymin.appendChild(new_root.createTextNode(sub_attr.text))
+                if sub_attr.tag == "xmax":
+                    xmax = new_root.createElement("xmax")
+                    bndbox_child.appendChild(xmax)
+                    xmax.appendChild(new_root.createTextNode(sub_attr.text))
+                if sub_attr.tag == "ymax":
+                    ymax = new_root.createElement("ymax")
+                    bndbox_child.appendChild(ymax)
+                    ymax.appendChild(new_root.createTextNode(sub_attr.text))                
+
+         
+    xml_str = new_root.toprettyxml(indent="\t")
+    with open(save_path_file,"w") as f:
+                f.write(xml_str)                       
+             
+                 
